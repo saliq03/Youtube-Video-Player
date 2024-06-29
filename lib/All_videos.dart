@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class AllVideos extends StatefulWidget {
@@ -41,9 +43,29 @@ class _AllVideosState extends State<AllVideos> {
             ]),
       ),
       floatingActionButton: FloatingActionButton(onPressed: () {
-
+        ShowDialogBox();
       },backgroundColor: Color(0xFF0F4E5B)
         ,child: Icon(Icons.add,size: 40,color: Colors.white,),),
     );
+  }
+  ShowDialogBox(){
+    return showDialog(context: context, builder: (BuildContext){
+      return AlertDialog(
+        content: Container(
+        height:300,
+          child: Column(
+            children: [
+              Row(
+                children: [IconButton(onPressed: (){Navigator.pop(context);}, icon:Icon(Icons.cancel)),
+                SizedBox(width: 30,),
+                  Text("Add Video",style: TextStyle(color: Colors.blueAccent,fontFamily: "Poppins",fontWeight: FontWeight.bold,fontSize: 22),)
+                ]),
+              Text("Add Youtube link"),
+            ],
+          ),
+        )
+      );
+    });
+
   }
 }

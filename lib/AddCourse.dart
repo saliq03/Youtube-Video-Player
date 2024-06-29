@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Addcourse extends StatefulWidget {
   const Addcourse({super.key});
@@ -8,11 +11,12 @@ class Addcourse extends StatefulWidget {
 }
 
 class _AddcourseState extends State<Addcourse> {
+  File? pickedImage;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text("Add Course",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
+        title:  Text("Add Course",style: TextStyle(fontFamily: "Poppins",fontWeight: FontWeight.bold,fontSize: 30),),
         centerTitle: true,
       ),
       body:  Padding(
@@ -20,24 +24,30 @@ class _AddcourseState extends State<Addcourse> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             Text("Upload the course banner picture",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black,fontSize: 22),),
+             Text("Upload the course banner picture",style: TextStyle(fontFamily: "Poppins",fontWeight: FontWeight.bold,color: Colors.black,fontSize: 20),),
               SizedBox(height: 20,),
-              Center(
-                child: Material(
-                  elevation: 5,
-                  child: Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black,width: 2),
-                      borderRadius: BorderRadius.circular(20)
+              GestureDetector(
+                onTap: (){
+                  PickImage();
+                },
+                child: Center(
+                  child: Material(
+                    borderRadius: BorderRadius.circular(20),
+                    elevation: 5,
+                    child: Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 2),
+                          borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: pickedImage==null?Icon(Icons.camera_alt_outlined,size: 30,):ClipRRect(borderRadius:BorderRadius.circular(20),child: Image.file(pickedImage!,fit: BoxFit.cover,))
                     ),
-                    child: Icon(Icons.camera_alt_outlined,size: 30,),
                   ),
                 ),
               ),
               SizedBox(height: 20,),
-              Text("Course Name",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black,fontSize: 22),),
+              Text("Course Name",style: TextStyle(fontFamily: "Poppins",fontWeight: FontWeight.bold,color: Colors.black,fontSize: 22),),
               SizedBox(height: 10,),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
@@ -53,21 +63,35 @@ class _AddcourseState extends State<Addcourse> {
                   ),
                 ),
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 20,),
               Container(
                   margin: EdgeInsets.symmetric(horizontal: 10),
                 padding: EdgeInsets.symmetric(vertical: 5),
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
-                  color: Colors.green
+                  color: Color(0xFF0F4E5B)
                 ),
-                child: Center(child: Text("Add",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),)),
+                child: Center(child: Text("Add",style: TextStyle(fontFamily: "Poppins",color: Colors.white,fontSize: 30,fontWeight: FontWeight.bold),)),
 
               )
             ],
           ),
       ),
     );
+  }
+  PickImage()async{
+    try{
+      final photo=await ImagePicker().pickImage(source: ImageSource.gallery);
+      if(photo==null)return;
+      final tempimage=File(photo.path);
+      setState(() {
+        pickedImage=tempimage;
+      });
+    }
+    catch(ex){
+      print("error while picking image");
+        print(ex.toString());
+    }
   }
 }

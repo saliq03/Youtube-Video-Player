@@ -51,8 +51,7 @@ class _AllVideosState extends State<AllVideos> {
   ShowDialogBox(){
     return showDialog(context: context, builder: (BuildContext){
       return AlertDialog(
-        content: Container(
-        height:300,
+        title:  Container(
           child: Column(
             children: [
               Row(
@@ -60,7 +59,32 @@ class _AllVideosState extends State<AllVideos> {
                 SizedBox(width: 30,),
                   Text("Add Video",style: TextStyle(color: Colors.blueAccent,fontFamily: "Poppins",fontWeight: FontWeight.bold,fontSize: 22),)
                 ]),
-              Text("Add Youtube link"),
+              SizedBox(height: 10,),
+              Text("Add Youtube link",style: TextStyle(fontSize: 25,),),
+              SizedBox(height: 10,),
+              TextField(
+                    decoration: InputDecoration(
+                      hintText: "Add Link",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(11),
+                      )
+                    ),),
+              SizedBox(height: 20,),
+              GestureDetector(
+                onTap: (){
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 7),
+                  width: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(11),
+                    color: Color(0xFF0F4E5B),
+                  ),
+                  child: Center(child: Text("Add",style: TextStyle(fontFamily: "Poppins",color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold),)),
+                ),
+              )
+
             ],
           ),
         )

@@ -1,7 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:youtube_video_player/Home.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Platform.isAndroid?
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: "AIzaSyBhiIBb4TMwTXi3v5L-NQGInyI1VFcY1oI",
+          appId: "1:802941698241:android:d8221987fd82d709f75440",
+          messagingSenderId:"802941698241",
+          projectId: "video-player-4b20d")):
+    await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

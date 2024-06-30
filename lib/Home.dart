@@ -69,7 +69,6 @@ class _HomeState extends State<Home> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ClipRRect(
-                              
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.asset("assets/images/sample.png",fit: BoxFit.cover,height: 150,width: 140,)),
                             SizedBox(width: 10,),

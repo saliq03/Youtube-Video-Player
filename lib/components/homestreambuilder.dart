@@ -19,7 +19,22 @@ class _HomestreambuilderState extends State<Homestreambuilder> {
           if(snapshot.connectionState==ConnectionState.active){
               if(snapshot.hasData){
                 return ListView.builder(itemBuilder: (context,index){
-
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset("assets/images/sample.png",fit: BoxFit.cover,height: 150,width: 140,)),
+                      SizedBox(width: 10,),
+                      Column(
+                        children: [
+                          SizedBox(width: 200,child: Text("${snapshot.data!.docs[index]["Course"]}",style: TextStyle(fontFamily: "Poppins",fontSize: 22,fontWeight: FontWeight.bold),)),
+                          SizedBox(height: 10,),
+                          Text("(8 Videos)",style: TextStyle(fontFamily: "Poppins",color: Colors.orange,fontSize: 20),)
+                        ],
+                      )
+                    ],
+                  );
                 });
               }
               else if(snapshot.hasError){

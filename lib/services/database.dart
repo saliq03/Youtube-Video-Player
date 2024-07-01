@@ -18,9 +18,13 @@ class DatabaseMethods{
     });
   }
 
+<<<<<<< HEAD
   Future UpdataCount(String id,int count) async {
     print("inside update count");
     print(count);
+=======
+  Future UpdataCount(String id,String count) async {
+>>>>>>> 3883744e975163a85fbe378e3a9045a3e8dce843
     return await FirebaseFirestore.instance
     .collection("Courses")
     .doc(id)

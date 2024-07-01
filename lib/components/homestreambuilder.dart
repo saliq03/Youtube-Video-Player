@@ -24,7 +24,7 @@ class _HomestreambuilderState extends State<Homestreambuilder> {
                   DocumentSnapshot ds=snapshot.data!.docs[index];
                   return GestureDetector(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AllVideos(title: ds["Course"], image: ds["Image"])));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AllVideos(title: ds["Course"], image: ds["Image"], id: ds["Id"],count: ds["Count"])));
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 10),

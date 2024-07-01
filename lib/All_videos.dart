@@ -3,12 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_video_player/services/database.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AllVideos extends StatefulWidget {
   final String title;
   final String image;
   final String id;
-        String count;
+  int count;
 
    AllVideos({required this.title,required this.image,required this.id,required this.count});
 
@@ -37,13 +38,7 @@ class _AllVideosState extends State<AllVideos> {
                   borderRadius: BorderRadius.circular(10),
                   child: Image.network(widget.image,fit: BoxFit.cover,height: 50,width: 50,)),
             ],)),
-            Expanded(
-              child: Column(
-                children: [
-
-                ],
-              ),
-            )
+            Expanded(child: Container(child: MyStreambuildre()))
             ]),
       ),
       floatingActionButton: FloatingActionButton(onPressed: () {
@@ -78,11 +73,14 @@ class _AllVideosState extends State<AllVideos> {
               GestureDetector(
                 onTap: (){
                   if(addVideoController!=""){
-                    int total=int.parse(widget.count);
-                    total=total+1;
-                    DatabaseMethods().UpdataCount(widget.id, total.toString());
-                    DatabaseMethods().addVideo(widget.id, addVideoController.text, "")
+                    // int total=widget.count;
+                    // total=total+1;
+                    widget.count=widget.count+1;
+                    String? thumbnail=getThumbnail(addVideoController.text);
+                    DatabaseMethods().UpdataCount(widget.id, widget.count);
+                    DatabaseMethods().addVideo(widget.id, addVideoController.text, thumbnail!)
                     .then((value){
+                      addVideoController.text='';
                       Fluttertoast.showToast(
                           msg: "Video Added Sucessfully",
                           toastLength: Toast.LENGTH_SHORT,
@@ -116,9 +114,52 @@ class _AllVideosState extends State<AllVideos> {
 
   }
 
-  String? getThumbnail( String videourl){
-    final Uri? uri=Uri.tryParse(videourl);
-    if(uri==null)return null;
-    return "what ot do";
+  String? getThumbnail( String videoUrl){
+    String videoId = '';
+    if (videoUrl.contains('youtube.com')) {
+      final uri = Uri.parse(videoUrl);
+      videoId = uri.queryParameters['v'] ?? '';
+     return 'https://img.youtube.com/vi/$videoId/0.jpg';
+    } else if (videoUrl.contains('youtu.be')) {
+      final uri = Uri.parse(videoUrl);
+      videoId = uri.pathSegments.last;
+      return 'https://img.youtube.com/vi/$videoId/0.jpg';
+    }
+    return null;
+
+  }
+
+  Widget MyStreambuildre(){
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance.collection("Courses").doc(widget.id).collection("Videos").snapshots(),
+        builder: (context,snapshot){
+          if(snapshot.connectionState==ConnectionState.active){
+            if(snapshot.hasData){
+              return ListView.builder(
+                  itemCount: widget.count,
+                  itemBuilder: (context,index){
+                    DocumentSnapshot ds=snapshot.data!.docs[index];
+                    return GestureDetector(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 15),
+                        child: Image.network(ds["Image"],fit: BoxFit.cover,height: 200,)),
+                            );
+
+                  });
+            }
+            else if(snapshot.hasError){
+              return Center(child: Text("Error found"));
+            }
+            else{
+              return Center(child: Text("No data found"));
+            }
+          }
+          else{
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        }
+    );
   }
 }

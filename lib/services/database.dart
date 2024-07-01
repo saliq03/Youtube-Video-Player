@@ -6,4 +6,24 @@ class DatabaseMethods{
         .doc(id)
         .set(userinfo);
   }
+
+  Future addVideo(String id,String link,String image) async {
+    return await FirebaseFirestore.instance
+        .collection("Courses")
+        .doc(id)
+        .collection("Videos")
+        .add({
+      "Link": link,
+      "Image":image
+    });
+  }
+
+  Future UpdataCount(String id,String count) async {
+    return await FirebaseFirestore.instance
+    .collection("Courses")
+    .doc(id)
+    .update({
+      "Count": count
+    });
+  }
 }

@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:youtube_video_player/All_videos.dart';
 
 class Homestreambuilder extends StatefulWidget {
   const Homestreambuilder({super.key});
@@ -12,28 +13,38 @@ class Homestreambuilder extends StatefulWidget {
 class _HomestreambuilderState extends State<Homestreambuilder> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: StreamBuilder(
+    return  StreamBuilder(
         stream: FirebaseFirestore.instance.collection("Courses").snapshots(),
         builder: (context, snapshot){
           if(snapshot.connectionState==ConnectionState.active){
               if(snapshot.hasData){
-                return ListView.builder(itemBuilder: (context,index){
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset("assets/images/sample.png",fit: BoxFit.cover,height: 150,width: 140,)),
-                      SizedBox(width: 10,),
-                      Column(
+                return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context,index){
+                  DocumentSnapshot ds=snapshot.data!.docs[index];
+                  return GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AllVideos(title: ds["Course"], image: ds["Image"])));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(width: 200,child: Text("${snapshot.data!.docs[index]["Course"]}",style: TextStyle(fontFamily: "Poppins",fontSize: 22,fontWeight: FontWeight.bold),)),
-                          SizedBox(height: 10,),
-                          Text("(8 Videos)",style: TextStyle(fontFamily: "Poppins",color: Colors.orange,fontSize: 20),)
+                          ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.network(ds["Image"],fit: BoxFit.cover,height: 150,width: 140,)),
+                          SizedBox(width: 10,),
+                          Column(
+                            children: [
+                              SizedBox(width: 200,child: Center(child: Text(ds["Course"],style: TextStyle(fontFamily: "Poppins",fontSize: 22,fontWeight: FontWeight.bold),))),
+                              SizedBox(height: 10,),
+                              Text("(${ds["Count"]} Videos)",style: TextStyle(fontFamily: "Poppins",color: Colors.orange,fontSize: 20),)
+                            ],
+                          )
                         ],
-                      )
-                    ],
+                      ),
+                    ),
                   );
                 });
               }
@@ -51,9 +62,6 @@ class _HomestreambuilderState extends State<Homestreambuilder> {
               child: CircularProgressIndicator(),
             );
           }
-        }
-
-      ),
-    );
+        });
   }
 }

@@ -110,11 +110,12 @@ class _AddcourseState extends State<Addcourse> {
     if(pickedImage!=null && courseNameController.text!=""){
       String id=randomAlphaNumeric(10);
       FirebaseStorage storage=FirebaseStorage.instanceFor(bucket: "video-player-4b20d.appspot.com");
-      TaskSnapshot snapshot= await storage.ref("BlogImages").child(id).putFile(pickedImage!);
+      TaskSnapshot snapshot= await storage.ref("BlogImages/$id").putFile(pickedImage!);
       String imageurl= await snapshot.ref.getDownloadURL();
       Map<String,dynamic> userinfo={
         "Id": id,
         "Course": courseNameController.text.toString(),
+        "Count": 0,
         "Image": imageurl};
        await DatabaseMethods().addCourse(id, userinfo).then((value){
          Fluttertoast.showToast(
@@ -128,6 +129,7 @@ class _AddcourseState extends State<Addcourse> {
          );
          pickedImage=null;
          courseNameController.text='';
+         setState(() {});
        });
 
     }

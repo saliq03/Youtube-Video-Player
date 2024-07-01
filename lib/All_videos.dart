@@ -1,19 +1,23 @@
-import 'dart:math';
+
 
 import 'package:flutter/material.dart';
+import 'package:youtube_video_player/services/database.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AllVideos extends StatefulWidget {
   final String title;
   final String image;
+  final String id;
+        String count;
 
-  const AllVideos({required this.title,required this.image});
-
+   AllVideos({required this.title,required this.image,required this.id,required this.count});
 
   @override
   State<AllVideos> createState() => _AllVideosState();
 }
 
 class _AllVideosState extends State<AllVideos> {
+  TextEditingController addVideoController=TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +35,7 @@ class _AllVideosState extends State<AllVideos> {
               Text(widget.title,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30,fontFamily: "Poppins"),),
               ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(widget.image,fit: BoxFit.cover,height: 50,width: 50,)),
+                  child: Image.network(widget.image,fit: BoxFit.cover,height: 50,width: 50,)),
             ],)),
             Expanded(
               child: Column(
@@ -63,6 +67,7 @@ class _AllVideosState extends State<AllVideos> {
               Text("Add Youtube link",style: TextStyle(fontSize: 25,),),
               SizedBox(height: 10,),
               TextField(
+                controller: addVideoController,
                     decoration: InputDecoration(
                       hintText: "Add Link",
                       border: OutlineInputBorder(
@@ -72,7 +77,25 @@ class _AllVideosState extends State<AllVideos> {
               SizedBox(height: 20,),
               GestureDetector(
                 onTap: (){
-                  Navigator.pop(context);
+                  if(addVideoController!=""){
+                    int total=int.parse(widget.count);
+                    total=total+1;
+                    DatabaseMethods().UpdataCount(widget.id, total.toString());
+                    DatabaseMethods().addVideo(widget.id, addVideoController.text, "")
+                    .then((value){
+                      Fluttertoast.showToast(
+                          msg: "Video Added Sucessfully",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0);
+                      });
+                    Navigator.pop(context);
+                  }
+
+
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 7),
@@ -90,6 +113,12 @@ class _AllVideosState extends State<AllVideos> {
         )
       );
     });
+
+  }
+
+  String? getThumbnail( String videourl){
+    final Uri? uri=Uri.tryParse(videourl);
+    if(uri==null)return null;
 
   }
 }

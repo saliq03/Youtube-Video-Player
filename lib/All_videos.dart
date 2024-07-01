@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:youtube_video_player/playVideo.dart';
 import 'package:youtube_video_player/services/database.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -73,8 +74,6 @@ class _AllVideosState extends State<AllVideos> {
               GestureDetector(
                 onTap: (){
                   if(addVideoController!=""){
-                    // int total=widget.count;
-                    // total=total+1;
                     widget.count=widget.count+1;
                     String? thumbnail=getThumbnail(addVideoController.text);
                     DatabaseMethods().UpdataCount(widget.id, widget.count);
@@ -140,6 +139,9 @@ class _AllVideosState extends State<AllVideos> {
                   itemBuilder: (context,index){
                     DocumentSnapshot ds=snapshot.data!.docs[index];
                     return GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Playvideo(name:widget.title, link: ds["Link"])));
+                      },
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 15),
                         child: Image.network(ds["Image"],fit: BoxFit.cover,height: 200,)),

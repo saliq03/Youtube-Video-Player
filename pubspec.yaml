@@ -52,7 +52,7 @@ dev_dependencies:
   cloud_firestore: ^5.0.2
   random_string: ^2.3.1
   fluttertoast: ^8.2.6
-
+  webview_flutter: ^4.8.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
